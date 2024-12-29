@@ -5,7 +5,7 @@ WORKDIR /var/lib/mysql
 COPY . /var/lib/mysql
 
 RUN apk update \
-    && apk add --no-cache mariadb mariadb-client openrc \
+    && apk add --no-cache mariadb mariadb-client \
     && apk cache clean
 
 RUN mysql_install_db --user=mysql --datadir=/var/lib/mysql
