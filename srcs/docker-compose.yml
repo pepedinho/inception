@@ -4,13 +4,42 @@ services:
         environment:
             MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
             MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+        volumes:
+            - ${HOME}/itahri/data/mariadb_volumes:/var/lib/mysql
         restart: always
         ports:
             - "3306:3306"
+        networks:
+            - wordpress-net
     server:
         build: requirements/nginx
+        volumes:
+            - ${HOME}/itahri/data/wordpress_volume:/var/www/html
         restart: always
         depends_on:
-          - db
+          - wordpress
         ports: 
             - "8080:80"
+        networks:
+            - wordpress-net
+    wordpress:
+        build: requirements/wordpress
+        environment:
+            WORDPRESS_DB_HOST: ${WORDPRESS_DB_HOST}
+            WORDPRESS_DB_NAME: ${WORDPRESS_DB_NAME}
+            WORDPRESS_DB_USER: ${WORDPRESS_DB_USER}
+            WORDPRESS_DB_PASSWORD: ${WORDPRESS_DB_PASSWORD}
+        volumes:
+            - ${HOME}/itahri/data/wordpress_volume:/var/www/html
+        networks:
+            - wordpress-net
+        restart: always
+        ports: 
+           - "9000:9000"
+
+networks:
+    wordpress-net:
+        driver: bridge
+
+
+#home/login/data/volume_name
