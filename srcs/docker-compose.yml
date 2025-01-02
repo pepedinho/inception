@@ -1,45 +1,65 @@
 services:
+    # MARIADB
     db:
+        container_name: mariadb
         build: requirements/mariadb
-        environment:
-            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+        env_file:
+            - ./.env
         volumes:
-            - ${HOME}/itahri/data/mariadb_volumes:/var/lib/mysql
+            - mariadb:/var/lib/mysql
         restart: always
         ports:
             - "3306:3306"
         networks:
-            - wordpress-net
+            - inception-net
+    # NGINX
     server:
+        container_name: nginx
         build: requirements/nginx
         volumes:
-            - ${HOME}/itahri/data/wordpress_volume:/var/www/html
+            - wordpress:/var/www/html
         restart: always
         depends_on:
           - wordpress
         ports: 
             - "8080:80"
         networks:
-            - wordpress-net
+            - inception-net
+        env_file:
+            - ./.env
+    # WORDPRESS
     wordpress:
+        container_name: wordpress
         build: requirements/wordpress
-        environment:
-            WORDPRESS_DB_HOST: ${WORDPRESS_DB_HOST}
-            WORDPRESS_DB_NAME: ${WORDPRESS_DB_NAME}
-            WORDPRESS_DB_USER: ${WORDPRESS_DB_USER}
-            WORDPRESS_DB_PASSWORD: ${WORDPRESS_DB_PASSWORD}
+        env_file:
+            - ./.env
         volumes:
-            - ${HOME}/itahri/data/wordpress_volume:/var/www/html
+            - wordpress:/var/www/html
         networks:
-            - wordpress-net
+            - inception-net
         restart: always
         ports: 
            - "9000:9000"
 
+volumes:
+  wordpress:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${HOME}/itahri/data/wordpress
+      o: bind
+  mariadb:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${HOME}/itahri/data/mariadb
+      o: bind
+
 networks:
-    wordpress-net:
+    inception-net:
         driver: bridge
+
+
 
 
 #home/login/data/volume_name

@@ -1,18 +1,49 @@
-FROM alpine:3.20
+FROM debian:bullseye
 
-WORKDIR /var/lib/mysql
+# Installer les dépendances nécessaires
+RUN apt update && apt install -y \
+    mariadb-server \
+    mariadb-client \
+    bash \
+    openrc \
+    && mkdir -p /run/mysqld \
+    && chown -R mysql:mysql /run/mysqld \
+    && apt clean && rm -rf /var/lib/apt/lists/*
 
-COPY . /var/lib/mysql
+# Copier le fichier de configuration personnalisé
+COPY 50-server.cnf /etc/mysql/mariadb.conf.d/
 
-RUN apk update \
-    && apk add --no-cache mariadb mariadb-client \
-    && apk cache clean
+# Définir le port exposé (optionnel, décommenter si nécessaire)
+# EXPOSE 3306
 
-RUN mysql_install_db --user=mysql --datadir=/var/lib/mysql
+# Copier le script d'entrée
+COPY ./entrypoint.sh /start-mariadb.sh
 
-COPY entrypoint.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/entrypoint.sh
+# Donner les permissions nécessaires
+RUN chmod +x /start-mariadb.sh && chmod 775 /var/lib/mysql
 
-EXPOSE 3306
+# Définir l'entrée du conteneur
+ENTRYPOINT ["/start-mariadb.sh"]
 
-ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+
+
+# FROM alpine:3.20
+#
+# RUN apk add --no-cache mariadb \
+#    && apk add mariadb-client \
+#    && apk add bash \
+#    && apk add openrc \
+#    && mkdir -p /run/mysqld \
+#    && chown -R mysql:mysql /run/mysqld
+#
+# COPY 50-server.cnf /etc/mysql/mariadb.conf.d/
+#
+# # EXPOSE 3306
+#
+# COPY ./entrypoint.sh /
+#
+# RUN chmod +x /entrypoint.sh && chmod 775 /var/lib/mysql
+#
+# # ENTRYPOINT [ "tail", "-f" ]
+#
+# ENTRYPOINT ["/start-mariadb.sh"]
