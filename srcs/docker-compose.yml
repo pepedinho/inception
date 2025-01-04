@@ -30,6 +30,8 @@ services:
     # WORDPRESS
     wordpress:
         container_name: wordpress
+        depends_on:
+          - db
         build: requirements/wordpress
         env_file:
             - ./.env
