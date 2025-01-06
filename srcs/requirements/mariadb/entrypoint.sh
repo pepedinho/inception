@@ -1,23 +1,19 @@
 #!/bin/sh
 
-set -e # Arrêter le script en cas d'erreur
+set -e 
 
 echo "LANCEMENT DU SCRIPT DE CONFIGURATION MARIA DB"
 
-# Démarrer MariaDB directement en arrière-plan
 mysqld_safe --datadir=/var/lib/mysql &
 
-# Attendre que MariaDB soit prêt
 echo "Attente du démarrage de MariaDB..."
 sleep 5
 
-# Vérifier si les variables d'environnement nécessaires sont définies
 if [ -z "$MYSQL_USER" ] || [ -z "$MYSQL_PASSWORD" ] || [ -z "$MYSQL_ROOT_PASSWORD" ] || [ -z "$MYSQL_NAME" ]; then
   echo "Erreur : Toutes les variables d'environnement (MYSQL_USER, MYSQL_PASSWORD, MYSQL_ROOT_PASSWORD, MYSQL_NAME) doivent être définies."
   exit 1
 fi
 
-# Configuration initiale
 echo "FLUSH PRIVILEGES;" | mysql -u root
 
 # check user

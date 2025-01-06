@@ -8,8 +8,6 @@ services:
         volumes:
             - mariadb:/var/lib/mysql
         restart: always
-        ports:
-            - "3306:3306"
         networks:
             - inception-net
     # NGINX
@@ -22,7 +20,7 @@ services:
         depends_on:
           - wordpress
         ports: 
-            - "8080:80"
+            - "443:443"
         networks:
             - inception-net
         env_file:
@@ -40,8 +38,6 @@ services:
         networks:
             - inception-net
         restart: always
-        ports: 
-           - "9000:9000"
 
 volumes:
   wordpress:

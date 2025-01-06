@@ -25,12 +25,15 @@ clean :
 	docker system prune -af
 
 fclean: delete clean
-	docker volume rm srcs_mariadb srcs_wordpress
+	docker volume prune -af
 
 log :
 	docker compose -f srcs logs
 
 re : clean all
+
+fre : fclean all
+
 
 dock: 
 	@echo "$(BLEU_CLAIR)⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀$(RESET)"

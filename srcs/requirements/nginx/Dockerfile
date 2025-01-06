@@ -3,11 +3,17 @@ FROM alpine:3.20
 WORKDIR /app
 
 RUN apk update \
-	&& apk add nginx
+	&& apk add nginx openssl
 
-# Copier la configuration
+RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+	-keyout /etc/ssl/private/nginx-selfsigned.key \
+	-out /etc/ssl/certs/nginx-selfsigned.crt \
+	-subj "/C=US/ST=YourState/L=YourCity/O=YourOrganization/OU=YourUnit/CN=yourdomain.com"
+
+
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY wordpress.conf /etc/nginx/conf.d/
 
 
 CMD ["nginx", "-g", "daemon off;"]
+# CMD ["sleep", "infinity"]
