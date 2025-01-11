@@ -26,6 +26,14 @@ if [ ! -f wp-config.php ]; then
                   --admin_password="${WP_ADMIN_PASSWORD}" \
                   --admin_email="${WP_ADMIN_EMAIL}" \
                   --allow-root
+
+  wp config set WP_REDIS_HOST $WP_REDIS_HOST --allow-root
+  wp config set WP_REDIS_PORT $WP_REDIS_PORT --allow-root
+  wp config set WP_CACHE true --add --allow-root
+  wp plugin install redis-cache --activate
+  wp redis enable --allow-root
+
+	chmod -R 777 . && chown -R nobody:nobody .
 fi
 
 chown -R nobody:nobody /var/www/html

@@ -19,9 +19,7 @@ delete :
 	sudo rm -rf ~/itahri/data/*
 
 clean :
-	docker container rm -f mariadb
-	docker container rm -f wordpress
-	docker container rm -f nginx
+	docker container prune -f
 	docker system prune -af
 
 fclean: delete clean

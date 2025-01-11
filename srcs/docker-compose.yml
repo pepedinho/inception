@@ -38,6 +38,14 @@ services:
         networks:
             - inception-net
         restart: always
+    redis:
+        container_name: redis
+        depends_on:
+            - wordpress
+        build: requirements/bonus/redis
+        networks:
+            - inception-net
+        restart: always
 
 volumes:
   wordpress:

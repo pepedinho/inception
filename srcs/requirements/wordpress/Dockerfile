@@ -8,6 +8,7 @@ RUN apk add --no-cache \
     php-phar \
     php-mysqli \
     php-iconv \
+    php-tokenizer \
     && rm -rf /var/cache/apk/*
 
 RUN mkdir -p /var/www/html \
