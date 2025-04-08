@@ -12,6 +12,7 @@ if [ ! -f wp-config.php ]; then
   # sed -i "s/username_here/${MYSQL_USER}/" wp-config.php
   # sed -i "s/password_here/${MYSQL_PASSWORD}/" wp-config.php
   # sed -i "s/localhost/${WORDPRESS_DB_HOST}/" wp-config.php
+  echo "memory_limit=512M" > /etc/php83/conf.d/memory-limit.ini
   wp core download --allow-root
 
   wp core config --dbname=${MYSQL_NAME} \
