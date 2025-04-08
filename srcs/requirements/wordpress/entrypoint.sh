@@ -28,6 +28,12 @@ if [ ! -f wp-config.php ]; then
                   --admin_email="${WP_ADMIN_EMAIL}" \
                   --allow-root
 
+  wp user create \
+      "$WP_USER" \
+      "$WP_USER_EMAIL" \
+      --user_pass="$WP_USER_PASSWORD" \
+      --allow-root
+
   wp config set WP_REDIS_HOST $WP_REDIS_HOST --allow-root
   wp config set WP_REDIS_PORT $WP_REDIS_PORT --allow-root
   wp config set WP_CACHE true --add --allow-root
