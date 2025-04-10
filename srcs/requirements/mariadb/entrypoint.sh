@@ -16,34 +16,33 @@ fi
 
 echo "FLUSH PRIVILEGES;" | mysql -u root
 
-# check user
+# je verifi si le user existe deja (je le supprime si il existe)
 echo "Vérification et suppression de l'utilisateur $MYSQL_USER s'il existe..."
 echo "DROP USER IF EXISTS '$MYSQL_USER'@'%';" | mysql -u root
 
-#create user
+#je creer le user
 echo "CREATE USER '$MYSQL_USER'@'%' IDENTIFIED BY '$MYSQL_PASSWORD';" | mysql -u root
 
-#give privilege to user
+#je lui donne les privilege
 echo "GRANT ALL PRIVILEGES ON *.* TO '$MYSQL_USER'@'%' IDENTIFIED BY '$MYSQL_PASSWORD';" | mysql -u root
 echo "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '$MYSQL_ROOT_PASSWORD';" | mysql -u root
 
-# Configurer les privilèges pour l'utilisateur root
+# pareil pour root
 echo "Configuration des privilèges pour root..."
 echo "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '$MYSQL_ROOT_PASSWORD';" | mysql -u root
 
-# Créer la base de données si elle n'existe pas
+# je créer la base de données si elle n'existe pas
 echo "Vérification et création de la base de données $MYSQL_NAME si elle n'existe pas..."
 echo "CREATE DATABASE IF NOT EXISTS $MYSQL_NAME;" | mysql -u root
 
-# Appliquer les privilèges
+# j'applique les privilèges
 echo "Application des privilèges..."
 echo "FLUSH PRIVILEGES;" | mysql -u root
-# Arrêter proprement MariaDB
+# on arrête proprement MariaDB
 echo "Arrêt propre de MariaDB après configuration..."
 
 mysqladmin -u root shutdown
 
-# Lancer MariaDB comme processus principal
 echo "Démarrage de MariaDB..."
 exec mysqld
 
